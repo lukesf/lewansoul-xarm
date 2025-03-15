@@ -46,15 +46,6 @@ def generate_launch_description():
           default_value='false',
           description='Use simulation (Gazebo) clock if true'),
       Node(
-          package='lewansoul_xarm',
-          executable='xarm_node',
-          name='xarm_node',
-          output='screen',
-          parameters=[{'use_sim_time': use_sim_time, 'robot_description': robot_description}],
-          arguments=['--ros-args', '--log-level', 'debug']
-      ),
-
-      Node(
           package='robot_state_publisher',
           executable='robot_state_publisher',
           name='robot_state_publisher',
@@ -62,4 +53,21 @@ def generate_launch_description():
           parameters=[{'use_sim_time': use_sim_time, 'robot_description': robot_description}],
           #arguments=['--ros-args', '--log-level', 'debug']
       ),
+      Node(
+          package='v4l2_camera',
+          executable='v4l2_camera_node',
+          name='camera',
+          output='screen',
+          #parameters=[{'use_sim_time': use_sim_time, 'robot_description': robot_description}],
+          #arguments=['--ros-args', '--log-level', 'debug']
+      ),
+      Node(
+          package='foxglove_bridge',
+          executable='foxglove_bridge',
+          name='camera',
+          output='screen',
+          #parameters=[{'use_sim_time': use_sim_time, 'robot_description': robot_description}],
+          #arguments=['--ros-args', '--log-level', 'debug']
+      ),
+
   ])
