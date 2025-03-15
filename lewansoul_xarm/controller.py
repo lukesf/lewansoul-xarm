@@ -63,7 +63,7 @@ class controller(object):
         # open a device
         self._device.open()
         self._serial_number = self._device.serial_number.encode('ascii')
-        print('connected to xArm controller serial number: ' + self._serial_number)
+        print('connected to xArm controller serial number: ' + str(self._serial_number))
 
         # compute bits_to_rads: Lewansoul bits are 1000 for 240 degree
         # range, then convert from degrees to radians
@@ -108,19 +108,24 @@ class controller(object):
         assert response[1] == 0x55
         # response should march number of servos
         count = response[4]
-        assert count == nb_servos
-        # array used to store SI positions
+        print(count)
+        print(nb_servos)
+        
         positions = numpy.zeros(nb_servos)
-        for i in range(nb_servos):
-            # check that servo ids match
-            id = response[5 + 3 * i]
-            assert id == servo_ids[i]
-            # compute joint position
-            p_lsb = response[5 + 3 * i + 1] # least significant bit
-            p_msb = response[5 + 3 * i + 2] # most significant bit
-            pos_bits = (p_msb << 8) + p_lsb
-            positions[i] = pos_bits * self.bits_to_si
-        return positions
+        #assert count == nb_servos 
+        if (count == nb_servos):
+            # array used to store SI positions
+            positions = numpy.zeros(nb_servos)
+            for i in range(nb_servos):
+                # check that servo ids match
+                id = response[5 + 3 * i]
+                assert id == servo_ids[i]
+                # compute joint position
+                p_lsb = response[5 + 3 * i + 1] # least significant bit
+                p_msb = response[5 + 3 * i + 2] # most significant bit
+                pos_bits = (p_msb << 8) + p_lsb
+                positions[i] = pos_bits * self.bits_to_si
+        return (count == nb_servos), positions
 
 
     def disable(self, servo_ids):

@@ -11,11 +11,17 @@ Naming convention is loosely based on CRTK: https://github.com/collaborative-rob
 ## Requirements
 
 ### Software
+Adapted from: 
+* https://github.com/adeguet1/lewansoul-xarm
+To use:
+* xarm https://github.com/ccourson/xArmServoController/tree/main
+* for ROS2
 
-Code tested on Linux Ubuntu 18.04 using Python 2.  The following packages are required:
+Code tested on Linux Ubuntu 22.04 using Python 3.  
+The following packages are required:
 ```sh
-sudo apt install libhidapi-hidraw0 libhidapi-libusb0 python-hid
-pip install --user easyhid
+sudo apt install libhidapi-hidraw0 libhidapi-libusb0 python-hid 
+pip install --user easyhid xarm
 ```
 
 ### Permissions

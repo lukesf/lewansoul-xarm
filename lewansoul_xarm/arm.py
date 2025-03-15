@@ -18,8 +18,27 @@
 import numpy
 import json
 import urdf_parser_py.urdf
-import kdl_parser_py.urdf
-import PyKDL
+
+#from pykdl_utils.kdl_kinematics import KDLKinematics
+#from pykdl_utils.kdl_parser import kdl_tree_from_urdf_model
+
+"""
+# Load the URDF model
+robot = urdf_parser_py.urdf.URDF.from_xml_string(open('path/to/your/robot.urdf', 'r').read())
+# Create a KDL tree from the URDF model
+tree = kdl_tree_from_urdf_model(robot)
+# Create a KDL kinematics object
+kinematics = KDLKinematics(robot, 'base_link', 'tip_link')
+# Get the number of joints
+num_joints = kinematics.num_joints
+# Get the joint positions
+joint_positions = [0.0] * num_joints
+# Calculate the forward kinematics
+pose = kinematics.forward(joint_positions)
+# Calculate the inverse kinematics
+ik_pose = kinematics.inverse(pose)
+"""
+
 
 class arm(object):
     """Arm class to define a logical arm on top of the servo controller.
@@ -120,7 +139,7 @@ class arm(object):
         # serial number [required]
         if not 'controller-serial-number' in self._configuration.keys():
             raise Exception('controller-serial-number is not defined in ' + config_file)
-        assert self._configuration['controller-serial-number'] == self._controller._serial_number
+        #assert self._configuration['controller-serial-number'] == self._controller._serial_number
 
         # servo ids [required]
         if not 'servo-ids' in self._configuration.keys():
@@ -147,17 +166,18 @@ class arm(object):
 
         self._measured_jp = numpy.zeros(len(self._servo_ids))
         self._goal_jp =  numpy.zeros(len(self._servo_ids))
-        self._measured_cp = PyKDL.Frame()
+        #self._measured_cp = PyKDL.Frame()
 
 
     def configure_urdf(self, urdf_file):
         self._kdl_urdf = urdf_parser_py.urdf.URDF.from_xml_file(urdf_file)
-        status, self._kdl_tree = kdl_parser_py.urdf.treeFromUrdfModel(self._kdl_urdf)
-        assert status
-        self._kdl_chain = self._kdl_tree.getChain('base_link', 'link5')
-        self._kdl_fk = PyKDL.ChainFkSolverPos_recursive(self._kdl_chain)
-        self._kdl_joints = PyKDL.JntArray(5)
-
+        # Create a KDL tree from the URDF model
+        #self._kdl_tree = kdl_tree_from_urdf_model(self._kdl_urdf)
+        # Create a KDL kinematics object
+        #self._kdl_kinematics = KDLKinematics(self._kdl_urdf, 'base_link', 'tip_link')
+        # Get the number of joints
+        num_joints = 5  # self._kdl_kinematics.num_joints
+        self._kdl_joints = [0.0] * num_joints 
 
 
     def enable(self):
@@ -184,12 +204,14 @@ class arm(object):
 
 
     def get_data(self):
-        self._measured_jp = numpy.multiply(self._directions, self._controller.measured_jp(self._servo_ids)) + self._position_offsets
-        if self._has_kin:
-            for i in range(5):
-                self._kdl_joints[i] = self._measured_jp[i]
-            status = self._kdl_fk.JntToCart(self._kdl_joints, self._measured_cp, 5)
-
+        rc, jps = self._controller.measured_jp(self._servo_ids);
+        if (rc):
+            self._measured_jp = numpy.multiply(self._directions, jps) + self._position_offsets
+        #if self._has_kin:
+            #for i in range(5):
+            #    self._kdl_joints[i] = self._measured_jp[i]
+            # Calculate the forward kinematics
+            #self._measured_cp = self._kdl_kinematics.forward(joint_positions)
 
     def measured_jp(self):
         return self._measured_jp
