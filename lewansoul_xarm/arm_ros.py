@@ -54,13 +54,14 @@ class arm_ros(object):
         node.create_subscription(std_msgs.msg.Empty, ns + "calibrate", self.calibrate, 1)
         node.create_subscription(sensor_msgs.msg.JointState, ns + "move_jp", self.move_jp, 1)
 
-    def publish(self):
+    def publish(self, now):
         try:
             # update data from controller
             self._arm.get_data()
             # measured joint state
             measured_jp = self._arm.measured_jp()
-            print(measured_jp)
+            #print(measured_jp)
+            self._js_msg.header.stamp = now.to_msg()
             self._js_msg.position = measured_jp
             self._measured_js_publisher.publish(self._js_msg)
             # goal joint position

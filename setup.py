@@ -26,7 +26,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'xarm_node = lewansoul_xarm.xarm_ros_main:ros_main'
+            'xarm_ros_main = lewansoul_xarm.xarm_ros_main:ros_main'
 
         ],
     },

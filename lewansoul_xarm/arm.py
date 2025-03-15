@@ -229,6 +229,7 @@ class arm(object):
 
 
     def move_jp(self, goals_si, time_s = 0.0):
+        print(goals_si)
         self._goal_jp = goals_si[:]
         self._controller.move_jp(self._servo_ids,
                                  numpy.multiply(self._directions, (goals_si - self._position_offsets)),

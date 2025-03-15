@@ -108,8 +108,8 @@ class controller(object):
         assert response[1] == 0x55
         # response should march number of servos
         count = response[4]
-        print(count)
-        print(nb_servos)
+        #print(count)
+        #print(nb_servos)
         
         positions = numpy.zeros(nb_servos)
         #assert count == nb_servos 

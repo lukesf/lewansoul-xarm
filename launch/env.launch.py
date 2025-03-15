@@ -47,15 +47,13 @@ def generate_launch_description():
           description='Use simulation (Gazebo) clock if true'),
       Node(
           package='lewansoul_xarm',
-          executable='xarm_ros_main',
-          name='xarm_ros_main',
+          executable='xarm_node',
+          name='xarm_node',
           output='screen',
-          remappings=[
-                ('/arm/measured_js', '/joint_states'),
-                ],
           parameters=[{'use_sim_time': use_sim_time, 'robot_description': robot_description}],
-          #arguments=['--ros-args', '--log-level', 'debug']
+          arguments=['--ros-args', '--log-level', 'debug']
       ),
+
       Node(
           package='robot_state_publisher',
           executable='robot_state_publisher',

@@ -48,5 +48,5 @@ class controller_ros(Node):
         self.get_logger().debug('tick')
 
         for arm in self._arms:
-            arm.publish()
+            arm.publish(now)
 
